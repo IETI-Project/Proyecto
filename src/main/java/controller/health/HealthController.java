@@ -1,15 +1,19 @@
 package controller.health;
 
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController 
+@Service
+@RestController
+@RequestMapping("/health")
 public class HealthController {
-    
-    @RequestMapping("/health")
+
+    @GetMapping
     public String checkAPI(){
-        return "<h1>The API is working ok!</h1>";
+        return "Metodo GET";
     }
        
 

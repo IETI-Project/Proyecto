@@ -15,4 +15,8 @@ public class UserServices {
     public HashMap<Integer, String> getUsers(){
         return up.getuserById();
     }
+
+    public void deleteUser(int id){
+        up.deleteUser(id);
+    }
 }

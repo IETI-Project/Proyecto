@@ -2,6 +2,7 @@ package main.persistence.impl;
 
 import main.persistence.UserPersistence;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 
 import java.util.HashMap;
@@ -15,4 +16,11 @@ public class UserPersistenceimpl implements UserPersistence {
     public HashMap<Integer, String> getuserById() {
         return users;
     }
+
+    @Override
+    public void deleteUser(int id){
+        users.remove(id);
+    }
+
+
 }

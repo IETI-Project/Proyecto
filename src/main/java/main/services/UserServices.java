@@ -20,4 +20,8 @@ public class UserServices {
     public User createUser(User user){
         return up.createUser(user);
     }
+
+    public User updateUser(User user,Integer id,String name){
+        return up.updateUser(user,id,name);
+    }
 }

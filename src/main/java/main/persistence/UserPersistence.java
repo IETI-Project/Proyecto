@@ -1,7 +1,11 @@
 package main.persistence;
 
+import main.model.User;
+
 import java.util.HashMap;
 
 public interface UserPersistence {
-    public HashMap<Integer,String> getuserById();
+    public HashMap<Integer, User> getAllUsers();
+
+    User createUser(User user);
 }

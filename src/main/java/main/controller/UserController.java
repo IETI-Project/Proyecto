@@ -1,27 +1,35 @@
 package main.controller;
 
 import com.google.gson.Gson;
+import main.model.User;
 import main.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@Service
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     @Autowired
-    UserServices us;
+    UserServices userServices;
 
-    @GetMapping
-    public ResponseEntity<?> getUsers(){
-        return new ResponseEntity<>(new Gson().toJson(us.getUsers()), HttpStatus.ACCEPTED);
+    @GetMapping()
+    public ResponseEntity<?> getAllUsers(){
+        return new ResponseEntity<>(new Gson().toJson(userServices.getAllUsers()), HttpStatus.ACCEPTED);
     }
+
+    @PostMapping("/addUser")
+    public ResponseEntity<User> createUser(@RequestBody User user){
+        System.out.println(user.toString());
+        userServices.createUser(user);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+
        
 
 }

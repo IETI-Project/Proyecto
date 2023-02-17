@@ -3,6 +3,7 @@ package main.persistence.impl;
 import main.model.User;
 import main.persistence.UserPersistence;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 
 import java.util.HashMap;
@@ -36,7 +37,10 @@ public class UserPersistenceimpl implements UserPersistence {
         String description = user.getDescription();
         users.remove(user.getId());
         return users.put(newId,new User(newId,newName,description));
-
+        
+    @Override   
+    public void deleteUser(int id){
+        users.remove(id);
     }
 
 

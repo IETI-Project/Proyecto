@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -34,6 +33,12 @@ public class UserController {
     public ResponseEntity<User> updateUser(@RequestBody User user,@PathVariable Integer id,@PathVariable String name){
         userServices.updateUser(user,id,name);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") int id){
+        us.deleteUser(id);
+        return ResponseEntity.ok().build();
     }
        
 

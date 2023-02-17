@@ -24,4 +24,8 @@ public class UserServices {
     public User updateUser(User user,Integer id,String name){
         return up.updateUser(user,id,name);
     }
+
+    public void deleteUser(int id){
+        up.deleteUser(id);
+    }
 }

@@ -33,10 +33,9 @@ public class UserPersistenceimpl implements UserPersistence {
     }
 
     @Override
-    public User updateUser(User user, Integer newId, String newName) {
-        String description = user.getDescription();
-        users.remove(user.getId());
-        return users.put(newId, new User(newId, newName, description));
+    public User updateUser(User user, Integer newId) {
+        users.remove(users.remove(newId));
+        return users.put(newId, user);
     }
         
     @Override   

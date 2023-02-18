@@ -10,7 +10,7 @@ public interface UserPersistence {
 
     User createUser(User user);
 
-    User updateUser(User user, Integer id, String name);
+    User updateUser(User user, Integer id);
     
     public void deleteUser(int id);
 

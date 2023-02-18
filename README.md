@@ -1,10 +1,10 @@
-##Autores
+## Autores
 ### Carlos Javier Orduz
 ### Enrique González Suárez
 ### Laura Valentina Alvarado
 ### Sergio Andrés Otero
 
-#Proyecto Integrador
+# Proyecto Integrador
 ## Pruebas:
 ### GET
 ![image](https://user-images.githubusercontent.com/98189066/219884405-655c6b29-890d-419b-a9dc-a3eadda0216e.png)

@@ -1,8 +1,8 @@
 ## Autores
-### Carlos Javier Orduz
-### Enrique González Suárez
-### Laura Valentina Alvarado
-### Sergio Andrés Otero
+- #### Carlos Javier Orduz
+- #### Enrique González Suárez
+- #### Laura Valentina Alvarado
+- #### Sergio Andrés Otero
 
 # Proyecto Integrador
 ## Pruebas:

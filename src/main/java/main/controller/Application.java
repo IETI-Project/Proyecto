@@ -6,7 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"main"})
-@EnableAutoConfiguration(exclude={MongoAutoConfiguration.class})
 public class Application {
 
 	public static void main(String[] args) {

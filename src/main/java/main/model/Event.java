@@ -26,10 +26,8 @@ public class Event {
 
 
 
-    @JsonCreator
-    public Event(@JsonProperty("name")String name, @JsonProperty("type")String type, @JsonProperty("description")String description, @JsonProperty("location")String location, 
-            @JsonProperty("date")Date date, @JsonProperty("host")String host, @JsonProperty("capacity")int capacity,
-            @JsonProperty("priceRange")String priceRange, @JsonProperty("locality")String locality) {
+    public Event(String name, String type, String description, String location, Date date, String host, int capacity,
+            String priceRange, String locality) {
         this.name = name;
         this.type = type;
         this.description = description;
@@ -41,11 +39,6 @@ public class Event {
         this.locality = locality;
     }
 
-    @JsonCreator
-    public Event(@JsonProperty("name")String name,@JsonProperty("description")String description){
-        this.name=name;
-        this.description=description;
-    }
 
     
 

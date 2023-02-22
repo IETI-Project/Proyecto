@@ -39,7 +39,6 @@ public class EventController {
 
     @PostMapping("/addEvent")
     public ResponseEntity<Event> createEvent(@RequestBody Event event){
-        System.out.println("entro");
         eventServices.createEvent(event);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 

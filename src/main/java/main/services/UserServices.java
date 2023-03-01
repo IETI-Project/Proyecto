@@ -1,31 +1,59 @@
 package main.services;
 
+import main.exceptions.UserException;
 import main.model.User;
-import main.persistence.UserPersistence;
+import main.repositories.UserRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class UserServices {
     @Autowired
-    private UserPersistence up;
+    private UserRepository userRepository;
 
-    public HashMap<Integer, User> getAllUsers(){
-        return up.getAllUsers();
+    public Optional<User> getUserById(ObjectId id) throws UserException {
+        try {
+            return userRepository.findById(id);
+        }
+        catch(Exception e){
+            throw new UserException(UserException.USER_NOT_FOUND_EXCEPTION);
+        }
     }
 
-    public User createUser(User user){
-        return up.createUser(user);
+    public List<User> getAllUsers() throws UserException {
+        return userRepository.findAll();
     }
 
-    public User updateUser(User user,Integer id){
-        return up.updateUser(user,id);
+    public User createUser(User user) throws UserException {
+        try {
+            return userRepository.save(user);
+        }
+        catch(Exception e){
+            throw new UserException(UserException.USER_NOT_CREATED_EXCEPTION);
+        }
     }
 
-    public void deleteUser(int id){
-        up.deleteUser(id);
+    public User updateUser(User user) throws UserException {
+        try {
+            return userRepository.save(user);
+        }
+        catch (Exception e){
+            throw new UserException(UserException.USER_NOT_UPDATE_EXCEPTION);
+        }
+
+    }
+
+    public void deleteUser(ObjectId id) throws UserException {
+        try {
+            userRepository.deleteById(id);
+        }
+        catch (Exception e){
+            throw new UserException(UserException.USER_NOT_DELETED_EXCEPTION);
+        }
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -43,6 +45,7 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
+    @RolesAllowed("ADMIN")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") String id) throws UserException {
         ObjectId objectId = new ObjectId(id);
         userServices.deleteUser(objectId);

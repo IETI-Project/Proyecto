@@ -3,6 +3,7 @@ package main.controller;
 import com.google.gson.Gson;
 import main.exceptions.UserException;
 import main.model.User;
+import main.model.dto.UserDto;
 import main.services.UserServices;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
+
 @RestController
-@RequestMapping("/users")
+@RequestMapping("v1/user")
 public class UserController {
 
     @Autowired
@@ -30,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<User> createUser(@RequestBody User user) throws UserException {
+    public ResponseEntity<User> createUser(@RequestBody UserDto user) throws UserException {
         userServices.createUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -43,6 +46,7 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
+
     public ResponseEntity<Void> deleteUser(@PathVariable("id") String id) throws UserException {
         ObjectId objectId = new ObjectId(id);
         userServices.deleteUser(objectId);

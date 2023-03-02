@@ -83,8 +83,6 @@ public class JwtRequestFilter
                     request.setAttribute( "jwtUserId", subject );
                     request.setAttribute("jwtUserRoles", roles);
                     response.setStatus( HttpServletResponse.SC_OK );
-                }else {
-                    response.sendError( HttpStatus.BAD_REQUEST.value(), "Missing or wrong token" );
                 }
                 filterChain.doFilter( request, response );
             }

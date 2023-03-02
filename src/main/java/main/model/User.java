@@ -2,16 +2,18 @@ package main.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import main.model.dto.UserDto;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.*;
 
 @Document("User")
 public class User {
-    @Id
+    @MongoId
     private ObjectId id;
     private String name;
     private String description;
@@ -26,14 +28,22 @@ public class User {
 
     public User(){
     }
-    public User(ObjectId id, String name, String email, String password,String encryptedPassword) {
-        this.id = id;
+    public User(String name, String email, String password) {
+        this.id = new ObjectId();
         this.name = name;
         this.email = email;
         this.encryptedPassword = new BCryptPasswordEncoder().encode(password);
         this.createdAt = new Date();
         roles = new ArrayList<>(Collections.singleton(RoleEnum.USER));
+    }
+
+    public User(UserDto userDto, String encryptedPassword) {
+        this.id = null;
+        this.name = userDto.getName();
+        this.email = userDto.getEmail();
         this.encryptedPassword = encryptedPassword;
+        this.createdAt = new Date();
+        roles = new ArrayList<>(Collections.singleton(RoleEnum.USER));
     }
 
     public String getDescription() {

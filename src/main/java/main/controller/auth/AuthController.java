@@ -52,7 +52,11 @@ public class AuthController
 
     private String generateToken(Optional<User> user, Date expirationDate )
     {
+        System.out.println("This is secret");
+        System.out.println("User Id:  "+ user.get().getId());
         return Jwts.builder()
+                .claim("name", user.get().getName())
+                .claim("email", user.get().getEmail())
                 .setSubject( String.valueOf( user.get().getId()))
                 .claim( CLAIMS_ROLES_KEY, user.get().getRoles() )
                 .setIssuedAt(new Date() )

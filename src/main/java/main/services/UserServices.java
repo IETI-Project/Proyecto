@@ -56,4 +56,8 @@ public class UserServices {
             throw new UserException(UserException.USER_NOT_DELETED_EXCEPTION);
         }
     }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

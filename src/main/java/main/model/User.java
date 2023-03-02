@@ -2,22 +2,22 @@ package main.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-
+@Document("User")
 public class User {
-    private int id;
+    @Id
+    private ObjectId id;
     private String name;
     private String description;
 
-    @JsonCreator
-    public User(@JsonProperty("id")int id,@JsonProperty("name")String name,@JsonProperty("description")String description){
-        this.id=id;
-        this.name=name;
-        this.description=description;
+    public User(){
     }
-    public User(int id,String name){
-        this.id=id;
+    public User(String name, String description){
         this.name=name;
+        this.description = description;
     }
 
     public String getDescription() {
@@ -28,7 +28,7 @@ public class User {
         this.description = description;
     }
 
-    public void setId(int id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -36,7 +36,7 @@ public class User {
         this.name = name;
     }
 
-    public int getId() {
+    public ObjectId getId() {
         return id;
     }
 
@@ -44,12 +44,4 @@ public class User {
         return name;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }

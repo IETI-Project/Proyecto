@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -33,8 +32,9 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEventById(@PathVariable ObjectId id){
-        return new ResponseEntity<>(new Gson().toJsonTree(eventServices.getEventById(id)), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> getEventById(@PathVariable String id){
+        ObjectId objectId = new ObjectId(id);
+        return new ResponseEntity<>(new Gson().toJsonTree(eventServices.getEventById(objectId)), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/addEvent")
@@ -45,8 +45,9 @@ public class EventController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> createEvent(@PathVariable ObjectId id, @RequestBody Event event){
-		return new ResponseEntity<>(new Gson().toJson(eventServices.updateEvent(id, event)), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> createEvent(@PathVariable String id, @RequestBody Event event){
+        ObjectId objectId = new ObjectId(id);
+		return new ResponseEntity<>(new Gson().toJson(eventServices.updateEvent(objectId, event)), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping
@@ -56,8 +57,9 @@ public class EventController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteEventById(@PathVariable ObjectId id){
-        eventServices.deleteAll();
+    public ResponseEntity<?> deleteEventById(@PathVariable String id){
+        ObjectId objectId = new ObjectId(id);
+        eventServices.deleteEventById(objectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

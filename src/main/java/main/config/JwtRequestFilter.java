@@ -1,100 +1,61 @@
 package main.config;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
-import static main.utils.Constants.CLAIMS_ROLES_KEY;
-import static main.utils.Constants.COOKIE_NAME;
+import main.services.UserDetailsServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 
-@Component
-public class JwtRequestFilter
-        extends OncePerRequestFilter
-{
-    @Value( "${app.secret}" )
-    String secret;
+public class JwtRequestFilter extends OncePerRequestFilter {
+    @Autowired
+    private JwtUtils jwtUtils;
 
-    public JwtRequestFilter()
-    {
-    }
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
     @Override
-    protected void doFilterInternal( HttpServletRequest request, HttpServletResponse response, FilterChain filterChain )
-            throws ServletException, IOException
-    {
-        String authHeader = request.getHeader( HttpHeaders.AUTHORIZATION );
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        try {
+            String jwt = parseJwt(request);
+            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+                String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
-        if ( HttpMethod.OPTIONS.name().equals( request.getMethod() ) )
-        {
-            response.setStatus( HttpServletResponse.SC_OK );
-            filterChain.doFilter( request, response );
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                        userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception e) {
+            logger.error("Cannot set user authentication: {}", e);
         }
-        else
-        {
-            try
-            {
-                Optional<Cookie> optionalCookie =
-                        request.getCookies() != null ? Arrays.stream( request.getCookies() ).filter(
-                                cookie -> Objects.equals( cookie.getName(), COOKIE_NAME ) ).findFirst() : Optional.empty();
 
-                String headerJwt = null;
-                if ( authHeader != null && authHeader.startsWith( "Bearer " ) )
-                {
-                    headerJwt = authHeader.substring( 7 );
-                }
-                String token = optionalCookie.isPresent() ? optionalCookie.get().getValue() : headerJwt;
-
-                if ( token != null )
-                {
-                    Jws<Claims> claims = Jwts.parser().setSigningKey( secret.getBytes() ).parseClaimsJws( token );
-                    Claims claimsBody = claims.getBody();
-                    String subject = claimsBody.getSubject();
-                    List<String> roles  = claims.getBody().get( CLAIMS_ROLES_KEY , ArrayList.class);
-
-                    if (roles == null) {
-                        response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid token roles");
-                    } else {
-                        SecurityContextHolder.getContext().setAuthentication( new TokenAuthentication( token, subject, roles));
-                    }
-
-                    request.setAttribute( "claims", claimsBody );
-                    request.setAttribute( "jwtUserId", subject );
-                    request.setAttribute("jwtUserRoles", roles);
-                    response.setStatus( HttpServletResponse.SC_OK );
-                }
-                filterChain.doFilter( request, response );
-            }
-            catch ( MalformedJwtException e )
-            {
-                response.sendError( HttpStatus.BAD_REQUEST.value(), "Missing or wrong token" );
-            }
-            catch ( ExpiredJwtException e )
-            {
-                response.sendError( HttpStatus.UNAUTHORIZED.value(), "Token expired or malformed" );
-            }
-        }
+        filterChain.doFilter(request, response);
     }
 
+    private String parseJwt(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7, headerAuth.length());
+        }
+
+        return null;
+    }
 }

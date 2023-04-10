@@ -20,13 +20,13 @@ import main.services.EventServices;
 import main.model.Event;
 
 @RestController
-@RequestMapping("/events")
+@RequestMapping("/v1/events")
 public class EventController {
     
     @Autowired
     EventServices eventServices;
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<?> getAllEvents(){
         return new ResponseEntity<>(new Gson().toJson(eventServices.getAllEvents()), HttpStatus.ACCEPTED);
     }

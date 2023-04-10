@@ -1,49 +1,41 @@
 package main.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import main.model.dto.UserDto;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.*;
 
 @Document("User")
 public class User {
-    @MongoId
-    private ObjectId id;
-    private String name;
+    @Id
+    private String id;
+    private String username;
     private String description;
 
-    List<RoleEnum> roles;
+    Set<Role> roles;
 
     private Date createdAt;
 
-    private String encryptedPassword;
+    private String password;
 
     private String email;
 
     public User(){
     }
     public User(String name, String email, String password) {
-        this.id = new ObjectId();
-        this.name = name;
+        this.username = name;
         this.email = email;
-        this.encryptedPassword = new BCryptPasswordEncoder().encode(password);
+        this.password = password;
         this.createdAt = new Date();
-        roles = new ArrayList<>(Collections.singleton(RoleEnum.USER));
+
     }
 
-    public User(UserDto userDto, String encryptedPassword) {
-        this.id = null;
-        this.name = userDto.getName();
+    public User(UserDto userDto, String password) {
+        this.username = userDto.getName();
         this.email = userDto.getEmail();
-        this.encryptedPassword = encryptedPassword;
+        this.password = password;
         this.createdAt = new Date();
-        roles = new ArrayList<>(Collections.singleton(RoleEnum.USER));
     }
 
     public String getDescription() {
@@ -54,35 +46,35 @@ public class User {
         this.description = description;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.username = name;
     }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
-    public String getEncryptedPassword() {
-        return encryptedPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
+    public void setPassword(String encryptedPassword) {
+        this.password = encryptedPassword;
     }
 
-    public List<RoleEnum> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleEnum> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
@@ -104,7 +96,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, encryptedPassword, createdAt);
+        return Objects.hash(id, username, email, password, createdAt);
     }
 
 }

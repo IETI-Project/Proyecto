@@ -54,8 +54,8 @@ public class EventServices {
         return event;
     }
 
-    public void deleteEvent(Event event){
-        eventRepository.delete(event);
+    public void deleteEventByName(String name) throws EventException {
+        eventRepository.delete(getEventByName(name));
     }
 
     public void deleteEventById(ObjectId id){

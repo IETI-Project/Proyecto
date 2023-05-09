@@ -65,7 +65,6 @@ public class EventController {
 
     @DeleteMapping("{event}")
     public ResponseEntity<?> deleteEvent(@PathVariable String event) throws EventException {
-        System.out.println("event " + event);
         eventServices.deleteEventByName(event);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -1,6 +1,7 @@
 package main.controller;
 
 
+import main.exceptions.EventException;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import main.services.EventServices;
 import main.model.Event;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://127.0.0.1:5173"})
 @RequestMapping("/v1/events")
 public class EventController {
     
@@ -25,10 +26,15 @@ public class EventController {
         return new ResponseEntity<>(new Gson().toJson(eventServices.getAllEvents()), HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<?> getEventByName(@PathVariable String name) throws EventException {
+        return new ResponseEntity<>(new Gson().toJson(eventServices.getEventByName(name)), HttpStatus.ACCEPTED);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getEventById(@PathVariable String id){
         ObjectId objectId = new ObjectId(id);
-        return new ResponseEntity<>(new Gson().toJsonTree(eventServices.getEventById(objectId)), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(new Gson().toJson(eventServices.getEventById(objectId)), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/addEvent")
@@ -39,7 +45,7 @@ public class EventController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> createEvent(@PathVariable String id, @RequestBody Event event){
+    public ResponseEntity<?> udpateEvent(@PathVariable String id, @RequestBody Event event){
         ObjectId objectId = new ObjectId(id);
 		return new ResponseEntity<>(new Gson().toJson(eventServices.updateEvent(objectId, event)), HttpStatus.ACCEPTED);
     }
@@ -50,16 +56,16 @@ public class EventController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteEventById(@PathVariable String id){
-        ObjectId objectId = new ObjectId(id);
-        eventServices.deleteEventById(objectId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @DeleteMapping("{id}")
+//    public ResponseEntity<?> deleteEventById(@PathVariable String id){
+//        ObjectId objectId = new ObjectId(id);
+//        eventServices.deleteEventById(objectId);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
     @DeleteMapping("{event}")
-    public ResponseEntity<?> deleteEvent(@PathVariable Event event){
-        eventServices.deleteEvent(event);
+    public ResponseEntity<?> deleteEvent(@PathVariable String event) throws EventException {
+        eventServices.deleteEventByName(event);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

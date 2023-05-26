@@ -18,16 +18,15 @@ public class Event {
     private String type;
     private String description;
     private String location;
-    private Date date;
+    private String date;
     private String host;
     private int capacity;
     private String priceRange;
     private String locality;
+    private String photoURL;
 
-
-
-    public Event(String name, String type, String description, String location, Date date, String host, int capacity,
-            String priceRange, String locality) {
+    public Event(String name, String type, String description, String location, String date, String host, int capacity,
+                 String priceRange, String locality, String photoURL) {
         this.name = name;
         this.type = type;
         this.description = description;
@@ -37,6 +36,7 @@ public class Event {
         this.capacity = capacity;
         this.priceRange = priceRange;
         this.locality = locality;
+        this.photoURL = photoURL;
     }
 
 
@@ -82,11 +82,11 @@ public class Event {
         this.location = location;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -122,6 +122,14 @@ public class Event {
         this.locality = locality;
     }
 
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
     
     public void update(Event newEvent) {
         this.name = newEvent.getName();
@@ -133,6 +141,7 @@ public class Event {
         this.capacity = newEvent.getCapacity();
         this.priceRange = newEvent.getPriceRange();
         this.locality = newEvent.getLocality();
+        this.photoURL = newEvent.getPhotoURL();
     }
    
 }
